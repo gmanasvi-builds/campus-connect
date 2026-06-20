@@ -27,6 +27,9 @@ export function AppLayout({ children }: { children: ReactNode }) {
   }
 
   return (
-    <div className="mx-auto min-h-screen max-w-md bg-background pb-24">{children}</div>
+    <div className="mx-auto min-h-screen max-w-md bg-background pb-24">
+      {children}
+      <BottomNav />
+    </div>
   );
 }
