@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as TransitRouteImport } from './routes/transit'
+import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as OnboardingRouteImport } from './routes/onboarding'
 import { Route as NotesRouteImport } from './routes/notes'
 import { Route as BooksRouteImport } from './routes/books'
@@ -19,6 +20,11 @@ import { Route as IndexRouteImport } from './routes/index'
 const TransitRoute = TransitRouteImport.update({
   id: '/transit',
   path: '/transit',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProfileRoute = ProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
   getParentRoute: () => rootRouteImport,
 } as any)
 const OnboardingRoute = OnboardingRouteImport.update({
@@ -53,6 +59,7 @@ export interface FileRoutesByFullPath {
   '/books': typeof BooksRoute
   '/notes': typeof NotesRoute
   '/onboarding': typeof OnboardingRoute
+  '/profile': typeof ProfileRoute
   '/transit': typeof TransitRoute
 }
 export interface FileRoutesByTo {
@@ -61,6 +68,7 @@ export interface FileRoutesByTo {
   '/books': typeof BooksRoute
   '/notes': typeof NotesRoute
   '/onboarding': typeof OnboardingRoute
+  '/profile': typeof ProfileRoute
   '/transit': typeof TransitRoute
 }
 export interface FileRoutesById {
@@ -70,13 +78,28 @@ export interface FileRoutesById {
   '/books': typeof BooksRoute
   '/notes': typeof NotesRoute
   '/onboarding': typeof OnboardingRoute
+  '/profile': typeof ProfileRoute
   '/transit': typeof TransitRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/auth' | '/books' | '/notes' | '/onboarding' | '/transit'
+  fullPaths:
+    | '/'
+    | '/auth'
+    | '/books'
+    | '/notes'
+    | '/onboarding'
+    | '/profile'
+    | '/transit'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/auth' | '/books' | '/notes' | '/onboarding' | '/transit'
+  to:
+    | '/'
+    | '/auth'
+    | '/books'
+    | '/notes'
+    | '/onboarding'
+    | '/profile'
+    | '/transit'
   id:
     | '__root__'
     | '/'
@@ -84,6 +107,7 @@ export interface FileRouteTypes {
     | '/books'
     | '/notes'
     | '/onboarding'
+    | '/profile'
     | '/transit'
   fileRoutesById: FileRoutesById
 }
@@ -93,6 +117,7 @@ export interface RootRouteChildren {
   BooksRoute: typeof BooksRoute
   NotesRoute: typeof NotesRoute
   OnboardingRoute: typeof OnboardingRoute
+  ProfileRoute: typeof ProfileRoute
   TransitRoute: typeof TransitRoute
 }
 
@@ -103,6 +128,13 @@ declare module '@tanstack/react-router' {
       path: '/transit'
       fullPath: '/transit'
       preLoaderRoute: typeof TransitRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/profile': {
+      id: '/profile'
+      path: '/profile'
+      fullPath: '/profile'
+      preLoaderRoute: typeof ProfileRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/onboarding': {
@@ -149,6 +181,7 @@ const rootRouteChildren: RootRouteChildren = {
   BooksRoute: BooksRoute,
   NotesRoute: NotesRoute,
   OnboardingRoute: OnboardingRoute,
+  ProfileRoute: ProfileRoute,
   TransitRoute: TransitRoute,
 }
 export const routeTree = rootRouteImport
