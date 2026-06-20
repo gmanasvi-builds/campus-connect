@@ -5,7 +5,6 @@ import { AppLayout } from "@/components/AppLayout";
 import { Logo } from "@/components/Logo";
 import { NoteCard, BookCard, RideCard } from "@/components/cards";
 import { ChatDialog } from "@/components/ChatDialog";
-import { Input } from "@/components/ui/input";
 import { useProfile } from "@/hooks/use-profile";
 import { NOTES, BOOKS, RIDES, type Book } from "@/lib/mock-data";
 
