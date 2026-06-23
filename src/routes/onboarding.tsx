@@ -3,16 +3,9 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { MapPin, Building2, GraduationCap, BookOpen, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
 import { Logo } from "@/components/Logo";
 import { useProfile } from "@/hooks/use-profile";
-import { STATES, UNIVERSITIES, COLLEGES, DEPARTMENTS } from "@/lib/mock-data";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 
 export const Route = createFileRoute("/onboarding")({
   head: () => ({
@@ -37,10 +30,17 @@ function OnboardingPage() {
     if (ready && profile?.college) navigate({ to: "/" });
   }, [ready, profile, navigate]);
 
-  const complete = state && university && college && department;
+  const complete =
+    state.trim() && university.trim() && college.trim() && department.trim();
 
   const onFinish = () => {
-    update({ state, university, college, department });
+    if (!complete) return;
+    update({
+      state: state.trim(),
+      university: university.trim(),
+      college: college.trim(),
+      department: department.trim(),
+    });
     navigate({ to: "/" });
   };
 
@@ -53,37 +53,37 @@ function OnboardingPage() {
       </p>
 
       <div className="mt-8 space-y-5">
-        <SelectField
+        <TextField
           label="State"
           icon={<MapPin className="h-4 w-4 text-accent" />}
-          placeholder="Select your state"
+          placeholder="e.g. Telangana"
           value={state}
           onChange={setState}
-          options={STATES}
+          maxLength={80}
         />
-        <SelectField
+        <TextField
           label="University / Board"
           icon={<Building2 className="h-4 w-4 text-accent" />}
-          placeholder="Select university or board"
+          placeholder="e.g. Osmania University"
           value={university}
           onChange={setUniversity}
-          options={UNIVERSITIES}
+          maxLength={120}
         />
-        <SelectField
+        <TextField
           label="College / School"
           icon={<GraduationCap className="h-4 w-4 text-accent" />}
-          placeholder="Select your institution"
+          placeholder="e.g. University College of Engineering"
           value={college}
           onChange={setCollege}
-          options={COLLEGES}
+          maxLength={120}
         />
-        <SelectField
+        <TextField
           label="Department / Stream"
           icon={<BookOpen className="h-4 w-4 text-accent" />}
-          placeholder="Select your branch"
+          placeholder="e.g. Computer Science"
           value={department}
           onChange={setDepartment}
-          options={DEPARTMENTS}
+          maxLength={80}
         />
       </div>
 
@@ -100,20 +100,20 @@ function OnboardingPage() {
   );
 }
 
-function SelectField({
+function TextField({
   label,
   icon,
   placeholder,
   value,
   onChange,
-  options,
+  maxLength,
 }: {
   label: string;
   icon: React.ReactNode;
   placeholder: string;
   value: string;
   onChange: (v: string) => void;
-  options: string[];
+  maxLength?: number;
 }) {
   return (
     <div className="space-y-1.5">
@@ -121,18 +121,13 @@ function SelectField({
         {icon}
         {label}
       </Label>
-      <Select value={value} onValueChange={onChange}>
-        <SelectTrigger className="h-11 w-full">
-          <SelectValue placeholder={placeholder} />
-        </SelectTrigger>
-        <SelectContent>
-          {options.map((o) => (
-            <SelectItem key={o} value={o}>
-              {o}
-            </SelectItem>
-          ))}
-        </SelectContent>
-      </Select>
+      <Input
+        className="h-11 w-full"
+        placeholder={placeholder}
+        value={value}
+        maxLength={maxLength}
+        onChange={(e) => onChange(e.target.value)}
+      />
     </div>
   );
 }
