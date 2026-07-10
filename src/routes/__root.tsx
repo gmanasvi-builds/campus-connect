@@ -78,21 +78,25 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1, maximum-scale=1" },
-      { title: "CampuShare — Share notes, books & rides on campus" },
+      { title: "CampuShare — Campus Dashboard" },
       {
         name: "description",
         content:
-          "CampuShare is India's hyper-local student app to trade study notes, rent textbooks, and pool campus commutes.",
+          "Trending notes, books for rent, and campus rides near you.",
       },
       { name: "author", content: "CampuShare" },
       { name: "theme-color", content: "#4f46e5" },
-      { property: "og:title", content: "CampuShare" },
+      { property: "og:title", content: "CampuShare — Campus Dashboard" },
       {
         property: "og:description",
-        content: "Trade study notes, rent books, and pool campus rides with students near you.",
+        content: "Trending notes, books for rent, and campus rides near you.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
+      { name: "twitter:title", content: "CampuShare — Campus Dashboard" },
+      { name: "twitter:description", content: "Trending notes, books for rent, and campus rides near you." },
+      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/1e857760-a510-48e9-8715-b3eec3e170a9/id-preview-7b164074--f9a3ca17-d39b-43b1-a88a-512cff8bd0a0.lovable.app-1783681290551.png" },
+      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/1e857760-a510-48e9-8715-b3eec3e170a9/id-preview-7b164074--f9a3ca17-d39b-43b1-a88a-512cff8bd0a0.lovable.app-1783681290551.png" },
     ],
     links: [
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
