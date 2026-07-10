@@ -39,8 +39,8 @@ function ProfilePage() {
       .join("")
       .toUpperCase() || "ST";
 
-  const onLogout = () => {
-    logout();
+  const onLogout = async () => {
+    await logout();
     navigate({ to: "/auth" });
   };
 
