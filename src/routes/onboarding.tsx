@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { MapPin, Building2, GraduationCap, BookOpen, Check } from "lucide-react";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
@@ -19,28 +20,45 @@ export const Route = createFileRoute("/onboarding")({
 
 function OnboardingPage() {
   const navigate = useNavigate();
-  const { ready, profile, update } = useProfile();
+  const { ready, isAuthenticated, profile, saveProfile } = useProfile();
   const [state, setState] = useState("");
   const [university, setUniversity] = useState("");
   const [college, setCollege] = useState("");
   const [department, setDepartment] = useState("");
+  const [saving, setSaving] = useState(false);
 
   useEffect(() => {
-    if (ready && !profile) navigate({ to: "/auth" });
-    if (ready && profile?.college) navigate({ to: "/" });
-  }, [ready, profile, navigate]);
+    if (!ready) return;
+    if (!isAuthenticated) navigate({ to: "/auth" });
+    else if (profile?.college) navigate({ to: "/" });
+  }, [ready, isAuthenticated, profile, navigate]);
+
+  // Pre-fill any details already stored on the profile.
+  useEffect(() => {
+    if (!profile) return;
+    setState((s) => s || profile.state || "");
+    setUniversity((u) => u || profile.university || "");
+    setCollege((c) => c || profile.college || "");
+    setDepartment((d) => d || profile.department || "");
+  }, [profile]);
 
   const complete =
     state.trim() && university.trim() && college.trim() && department.trim();
 
-  const onFinish = () => {
-    if (!complete) return;
-    update({
+  const onFinish = async () => {
+    if (!complete || saving) return;
+    setSaving(true);
+    const { error } = await saveProfile({
       state: state.trim(),
       university: university.trim(),
       college: college.trim(),
       department: department.trim(),
     });
+    setSaving(false);
+    if (error) {
+      toast.error(error.message || "Couldn't save your profile");
+      return;
+    }
     navigate({ to: "/" });
   };
 
@@ -90,11 +108,11 @@ function OnboardingPage() {
       <Button
         size="lg"
         className="mt-10 w-full"
-        disabled={!complete}
+        disabled={!complete || saving}
         onClick={onFinish}
       >
         <Check className="h-4 w-4" />
-        Enter CampuShare
+        {saving ? "Saving…" : "Enter CampuShare"}
       </Button>
     </div>
   );

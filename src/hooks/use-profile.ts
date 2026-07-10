@@ -1,59 +1,99 @@
 import { useCallback, useEffect, useState } from "react";
+import type { User } from "@supabase/supabase-js";
+import { supabase } from "@/integrations/supabase/client";
 
 export type Profile = {
-  name: string;
-  email: string;
-  state: string;
-  university: string;
-  college: string;
-  department: string;
+  id: string;
+  name: string | null;
+  email: string | null;
+  state: string | null;
+  university: string | null;
+  college: string | null;
+  department: string | null;
 };
 
-const KEY = "campushare:profile";
-
-function read(): Profile | null {
-  if (typeof window === "undefined") return null;
-  try {
-    const raw = window.localStorage.getItem(KEY);
-    return raw ? (JSON.parse(raw) as Profile) : null;
-  } catch {
-    return null;
-  }
-}
+const PROFILE_COLUMNS = "id,name,email,state,university,college,department";
 
 /**
- * Lightweight mock auth/profile store backed by localStorage.
- * No backend — purely to simulate the onboarding + session flow.
+ * Real auth + profile store backed by Lovable Cloud.
+ * Tracks the signed-in user and their profile row, and exposes helpers
+ * to persist onboarding details. Profile completion is gated on `college`.
  */
 export function useProfile() {
+  const [user, setUser] = useState<User | null>(null);
   const [profile, setProfile] = useState<Profile | null>(null);
   const [ready, setReady] = useState(false);
 
+  const loadProfile = useCallback(async (uid: string) => {
+    const { data } = await supabase
+      .from("profiles")
+      .select(PROFILE_COLUMNS)
+      .eq("id", uid)
+      .maybeSingle();
+    setProfile((data as Profile | null) ?? null);
+  }, []);
+
   useEffect(() => {
-    setProfile(read());
-    setReady(true);
-    const onStorage = () => setProfile(read());
-    window.addEventListener("storage", onStorage);
-    return () => window.removeEventListener("storage", onStorage);
-  }, []);
+    let active = true;
 
-  const save = useCallback((next: Profile) => {
-    window.localStorage.setItem(KEY, JSON.stringify(next));
-    setProfile(next);
-  }, []);
+    // Keep local state in sync with auth changes (login, logout, refresh).
+    const { data: sub } = supabase.auth.onAuthStateChange((_event, session) => {
+      if (!active) return;
+      const u = session?.user ?? null;
+      setUser(u);
+      if (u) {
+        // Defer the Supabase call out of the auth callback.
+        setTimeout(() => {
+          if (active) loadProfile(u.id);
+        }, 0);
+      } else {
+        setProfile(null);
+      }
+    });
 
-  const update = useCallback((patch: Partial<Profile>) => {
-    const current = read();
-    if (!current) return;
-    const next = { ...current, ...patch };
-    window.localStorage.setItem(KEY, JSON.stringify(next));
-    setProfile(next);
-  }, []);
+    // Initial session load.
+    supabase.auth.getSession().then(async ({ data }) => {
+      if (!active) return;
+      const u = data.session?.user ?? null;
+      setUser(u);
+      if (u) await loadProfile(u.id);
+      if (active) setReady(true);
+    });
 
-  const logout = useCallback(() => {
-    window.localStorage.removeItem(KEY);
+    return () => {
+      active = false;
+      sub.subscription.unsubscribe();
+    };
+  }, [loadProfile]);
+
+  const saveProfile = useCallback(
+    async (patch: Partial<Omit<Profile, "id">>) => {
+      if (!user) return { error: new Error("Not authenticated") };
+      const { data, error } = await supabase
+        .from("profiles")
+        .upsert({ id: user.id, ...patch })
+        .select(PROFILE_COLUMNS)
+        .maybeSingle();
+      if (!error && data) setProfile(data as Profile);
+      return { error };
+    },
+    [user],
+  );
+
+  const logout = useCallback(async () => {
+    await supabase.auth.signOut();
+    setUser(null);
     setProfile(null);
   }, []);
 
-  return { profile, ready, save, update, logout, isOnboarded: !!profile?.college };
+  return {
+    user,
+    profile,
+    ready,
+    isAuthenticated: !!user,
+    isOnboarded: !!profile?.college,
+    saveProfile,
+    update: saveProfile,
+    logout,
+  };
 }
