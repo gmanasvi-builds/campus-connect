@@ -65,10 +65,10 @@ function ProfilePage() {
       <section className="px-5 py-6">
         <h2 className="mb-3 text-sm font-bold text-muted-foreground">My campus</h2>
         <div className="space-y-px overflow-hidden rounded-2xl border border-border bg-card shadow-card">
-          <InfoRow icon={<MapPin className="h-4 w-4 text-accent" />} label="State" value={profile?.state} />
-          <InfoRow icon={<Building2 className="h-4 w-4 text-accent" />} label="University / Board" value={profile?.university} />
-          <InfoRow icon={<GraduationCap className="h-4 w-4 text-accent" />} label="College / School" value={profile?.college} />
-          <InfoRow icon={<BookOpen className="h-4 w-4 text-accent" />} label="Department" value={profile?.department} />
+          <InfoRow icon={<MapPin className="h-4 w-4 text-accent" />} label="State" value={profile?.state ?? undefined} />
+          <InfoRow icon={<Building2 className="h-4 w-4 text-accent" />} label="University / Board" value={profile?.university ?? undefined} />
+          <InfoRow icon={<GraduationCap className="h-4 w-4 text-accent" />} label="College / School" value={profile?.college ?? undefined} />
+          <InfoRow icon={<BookOpen className="h-4 w-4 text-accent" />} label="Department" value={profile?.department ?? undefined} />
         </div>
       </section>
 
