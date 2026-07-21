@@ -76,7 +76,16 @@ function ProfilePage() {
       </div>
 
       <section className="px-5 py-6">
-        <h2 className="mb-3 text-sm font-bold text-muted-foreground">My campus</h2>
+        <div className="mb-3 flex items-center justify-between">
+          <h2 className="text-sm font-bold text-muted-foreground">My campus</h2>
+          <button
+            onClick={() => setEditOpen(true)}
+            className="flex items-center gap-1 text-xs font-semibold text-primary hover:underline"
+          >
+            <Pencil className="h-3.5 w-3.5" />
+            Edit
+          </button>
+        </div>
         <div className="space-y-px overflow-hidden rounded-2xl border border-border bg-card shadow-card">
           <InfoRow icon={<MapPin className="h-4 w-4 text-accent" />} label="State" value={profile?.state ?? undefined} />
           <InfoRow icon={<Building2 className="h-4 w-4 text-accent" />} label="University / Board" value={profile?.university ?? undefined} />
