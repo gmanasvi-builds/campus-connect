@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import {
   MapPin,
@@ -12,9 +13,20 @@ import {
   Settings,
   HelpCircle,
   Shield,
+  Pencil,
 } from "lucide-react";
+import { toast } from "sonner";
 import { AppLayout } from "@/components/AppLayout";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from "@/components/ui/dialog";
 import { useProfile } from "@/hooks/use-profile";
 
 export const Route = createFileRoute("/profile")({
@@ -30,6 +42,7 @@ export const Route = createFileRoute("/profile")({
 function ProfilePage() {
   const { profile, logout } = useProfile();
   const navigate = useNavigate();
+  const [editOpen, setEditOpen] = useState(false);
 
   const initials =
     profile?.name
