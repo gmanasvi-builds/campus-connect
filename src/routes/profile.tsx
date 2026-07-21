@@ -110,8 +110,6 @@ function ProfilePage() {
         </Button>
         <p className="mt-4 text-center text-xs text-muted-foreground">CampuShare · v1.0 · Made for students 🇮🇳</p>
       </div>
-        <p className="mt-4 text-center text-xs text-muted-foreground">CampuShare · v1.0 · Made for students 🇮🇳</p>
-      </div>
 
       <EditProfileDialog open={editOpen} onOpenChange={setEditOpen} />
     </AppLayout>
