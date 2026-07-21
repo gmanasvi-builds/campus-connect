@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import {
   MapPin,
@@ -12,9 +13,20 @@ import {
   Settings,
   HelpCircle,
   Shield,
+  Pencil,
 } from "lucide-react";
+import { toast } from "sonner";
 import { AppLayout } from "@/components/AppLayout";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from "@/components/ui/dialog";
 import { useProfile } from "@/hooks/use-profile";
 
 export const Route = createFileRoute("/profile")({
@@ -30,6 +42,7 @@ export const Route = createFileRoute("/profile")({
 function ProfilePage() {
   const { profile, logout } = useProfile();
   const navigate = useNavigate();
+  const [editOpen, setEditOpen] = useState(false);
 
   const initials =
     profile?.name
@@ -63,7 +76,16 @@ function ProfilePage() {
       </div>
 
       <section className="px-5 py-6">
-        <h2 className="mb-3 text-sm font-bold text-muted-foreground">My campus</h2>
+        <div className="mb-3 flex items-center justify-between">
+          <h2 className="text-sm font-bold text-muted-foreground">My campus</h2>
+          <button
+            onClick={() => setEditOpen(true)}
+            className="flex items-center gap-1 text-xs font-semibold text-primary hover:underline"
+          >
+            <Pencil className="h-3.5 w-3.5" />
+            Edit
+          </button>
+        </div>
         <div className="space-y-px overflow-hidden rounded-2xl border border-border bg-card shadow-card">
           <InfoRow icon={<MapPin className="h-4 w-4 text-accent" />} label="State" value={profile?.state ?? undefined} />
           <InfoRow icon={<Building2 className="h-4 w-4 text-accent" />} label="University / Board" value={profile?.university ?? undefined} />
@@ -88,7 +110,94 @@ function ProfilePage() {
         </Button>
         <p className="mt-4 text-center text-xs text-muted-foreground">CampuShare · v1.0 · Made for students 🇮🇳</p>
       </div>
+
+      <EditProfileDialog open={editOpen} onOpenChange={setEditOpen} />
     </AppLayout>
+  );
+}
+
+function EditProfileDialog({
+  open,
+  onOpenChange,
+}: {
+  open: boolean;
+  onOpenChange: (v: boolean) => void;
+}) {
+  const { profile, update } = useProfile();
+  const [name, setName] = useState("");
+  const [state, setState] = useState("");
+  const [university, setUniversity] = useState("");
+  const [college, setCollege] = useState("");
+  const [department, setDepartment] = useState("");
+  const [saving, setSaving] = useState(false);
+
+  useEffect(() => {
+    if (!open) return;
+    setName(profile?.name ?? "");
+    setState(profile?.state ?? "");
+    setUniversity(profile?.university ?? "");
+    setCollege(profile?.college ?? "");
+    setDepartment(profile?.department ?? "");
+  }, [open, profile]);
+
+  const submit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setSaving(true);
+    const { error } = await update({
+      name: name.trim() || null,
+      state: state.trim() || null,
+      university: university.trim() || null,
+      college: college.trim() || null,
+      department: department.trim() || null,
+    });
+    setSaving(false);
+    if (error) {
+      toast.error(error.message || "Couldn't save changes");
+      return;
+    }
+    toast.success("Profile updated");
+    onOpenChange(false);
+  };
+
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="max-w-sm">
+        <DialogHeader>
+          <DialogTitle>Edit profile</DialogTitle>
+        </DialogHeader>
+        <form onSubmit={submit} className="space-y-3">
+          <Field label="Name" value={name} onChange={setName} placeholder="Your name" />
+          <Field label="State" value={state} onChange={setState} placeholder="e.g. Telangana" />
+          <Field label="University / Board" value={university} onChange={setUniversity} placeholder="e.g. Osmania University" />
+          <Field label="College / School" value={college} onChange={setCollege} placeholder="e.g. UCE" />
+          <Field label="Department / Stream" value={department} onChange={setDepartment} placeholder="e.g. Computer Science" />
+          <DialogFooter>
+            <Button type="submit" className="w-full" disabled={saving}>
+              {saving ? "Saving…" : "Save changes"}
+            </Button>
+          </DialogFooter>
+        </form>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
+function Field({
+  label,
+  value,
+  onChange,
+  placeholder,
+}: {
+  label: string;
+  value: string;
+  onChange: (v: string) => void;
+  placeholder?: string;
+}) {
+  return (
+    <div className="space-y-1.5">
+      <Label className="text-xs font-semibold">{label}</Label>
+      <Input value={value} onChange={(e) => onChange(e.target.value)} placeholder={placeholder} maxLength={120} />
+    </div>
   );
 }
 

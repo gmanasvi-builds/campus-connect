@@ -55,6 +55,19 @@ export type Note = {
   trending?: boolean;
 };
 
+export const RENTAL_DURATIONS = [
+  "Sale (no return)",
+  "1 day",
+  "3 days",
+  "1 week",
+  "2 weeks",
+  "1 month",
+  "1 semester",
+  "1 academic year",
+] as const;
+
+export type RentalDuration = (typeof RENTAL_DURATIONS)[number];
+
 export type Book = {
   id: string;
   title: string;
@@ -64,6 +77,7 @@ export type Book = {
   seller: string;
   distanceKm: number;
   emoji: string;
+  rentalDuration?: RentalDuration;
 };
 
 export type Ride = {

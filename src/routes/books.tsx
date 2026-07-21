@@ -16,7 +16,7 @@ import {
   DialogTitle,
   DialogFooter,
 } from "@/components/ui/dialog";
-import { BOOKS, type Book } from "@/lib/mock-data";
+import { BOOKS, RENTAL_DURATIONS, type Book, type RentalDuration } from "@/lib/mock-data";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/books")({
@@ -88,12 +88,14 @@ function PostDialog({
   const [price, setPrice] = useState("");
   const [condition, setCondition] = useState<Book["condition"]>("Used");
   const [emoji, setEmoji] = useState("📘");
+  const [rentalDuration, setRentalDuration] = useState<RentalDuration>("Sale (no return)");
 
   const reset = () => {
     setTitle("");
     setPrice("");
     setCondition("Used");
     setEmoji("📘");
+    setRentalDuration("Sale (no return)");
   };
 
   const submit = (e: React.FormEvent) => {
@@ -108,6 +110,7 @@ function PostDialog({
       seller: "You",
       distanceKm: 0,
       emoji,
+      rentalDuration,
     });
     reset();
     onOpenChange(false);
@@ -178,6 +181,24 @@ function PostDialog({
                 ))}
               </div>
             </div>
+          </div>
+
+          <div className="space-y-1.5">
+            <Label className="text-xs font-semibold">Rental duration</Label>
+            <select
+              value={rentalDuration}
+              onChange={(e) => setRentalDuration(e.target.value as RentalDuration)}
+              className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm"
+            >
+              {RENTAL_DURATIONS.map((d) => (
+                <option key={d} value={d}>
+                  {d}
+                </option>
+              ))}
+            </select>
+            <p className="text-[11px] text-muted-foreground">
+              Choose how long you're lending this item (or select "Sale" if selling outright).
+            </p>
           </div>
 
           <DialogFooter>

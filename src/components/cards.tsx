@@ -90,6 +90,11 @@ export function BookCard({ book, onChat }: { book: Book; onChat: (book: Book) =>
             {book.condition}
           </Badge>
           <span className="text-[11px] text-muted-foreground">{book.category}</span>
+          {book.rentalDuration && (
+            <span className="rounded-md bg-accent/15 px-1.5 py-0.5 text-[11px] font-semibold text-accent-foreground">
+              {book.rentalDuration}
+            </span>
+          )}
         </div>
         <div className="mt-1 flex items-center gap-1 text-[11px] text-muted-foreground">
           <MapPin className="h-3 w-3 text-accent" />
