@@ -110,7 +110,96 @@ function ProfilePage() {
         </Button>
         <p className="mt-4 text-center text-xs text-muted-foreground">CampuShare · v1.0 · Made for students 🇮🇳</p>
       </div>
+        <p className="mt-4 text-center text-xs text-muted-foreground">CampuShare · v1.0 · Made for students 🇮🇳</p>
+      </div>
+
+      <EditProfileDialog open={editOpen} onOpenChange={setEditOpen} />
     </AppLayout>
+  );
+}
+
+function EditProfileDialog({
+  open,
+  onOpenChange,
+}: {
+  open: boolean;
+  onOpenChange: (v: boolean) => void;
+}) {
+  const { profile, update } = useProfile();
+  const [name, setName] = useState("");
+  const [state, setState] = useState("");
+  const [university, setUniversity] = useState("");
+  const [college, setCollege] = useState("");
+  const [department, setDepartment] = useState("");
+  const [saving, setSaving] = useState(false);
+
+  useEffect(() => {
+    if (!open) return;
+    setName(profile?.name ?? "");
+    setState(profile?.state ?? "");
+    setUniversity(profile?.university ?? "");
+    setCollege(profile?.college ?? "");
+    setDepartment(profile?.department ?? "");
+  }, [open, profile]);
+
+  const submit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setSaving(true);
+    const { error } = await update({
+      name: name.trim() || null,
+      state: state.trim() || null,
+      university: university.trim() || null,
+      college: college.trim() || null,
+      department: department.trim() || null,
+    });
+    setSaving(false);
+    if (error) {
+      toast.error(error.message || "Couldn't save changes");
+      return;
+    }
+    toast.success("Profile updated");
+    onOpenChange(false);
+  };
+
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="max-w-sm">
+        <DialogHeader>
+          <DialogTitle>Edit profile</DialogTitle>
+        </DialogHeader>
+        <form onSubmit={submit} className="space-y-3">
+          <Field label="Name" value={name} onChange={setName} placeholder="Your name" />
+          <Field label="State" value={state} onChange={setState} placeholder="e.g. Telangana" />
+          <Field label="University / Board" value={university} onChange={setUniversity} placeholder="e.g. Osmania University" />
+          <Field label="College / School" value={college} onChange={setCollege} placeholder="e.g. UCE" />
+          <Field label="Department / Stream" value={department} onChange={setDepartment} placeholder="e.g. Computer Science" />
+          <DialogFooter>
+            <Button type="submit" className="w-full" disabled={saving}>
+              {saving ? "Saving…" : "Save changes"}
+            </Button>
+          </DialogFooter>
+        </form>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
+function Field({
+  label,
+  value,
+  onChange,
+  placeholder,
+}: {
+  label: string;
+  value: string;
+  onChange: (v: string) => void;
+  placeholder?: string;
+}) {
+  return (
+    <div className="space-y-1.5">
+      <Label className="text-xs font-semibold">{label}</Label>
+      <Input value={value} onChange={(e) => onChange(e.target.value)} placeholder={placeholder} maxLength={120} />
+    </div>
   );
 }
 
