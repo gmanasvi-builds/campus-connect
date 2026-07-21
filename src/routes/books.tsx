@@ -16,7 +16,7 @@ import {
   DialogTitle,
   DialogFooter,
 } from "@/components/ui/dialog";
-import { BOOKS, type Book } from "@/lib/mock-data";
+import { BOOKS, RENTAL_DURATIONS, type Book, type RentalDuration } from "@/lib/mock-data";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/books")({
