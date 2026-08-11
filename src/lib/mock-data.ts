@@ -89,6 +89,7 @@ export type Ride = {
   mode: "Auto" | "Cab" | "Bus" | "Bike";
   host: string;
   costPerHead: number;
+  distanceKm?: number;
 };
 
 export const NOTES: Note[] = [
