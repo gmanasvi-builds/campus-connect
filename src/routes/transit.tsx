@@ -1,10 +1,15 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
-import { Plus, MapPin, Navigation, Clock } from "lucide-react";
+import { Plus, MapPin, Navigation, Clock, SearchX } from "lucide-react";
 import { toast } from "sonner";
 import { AppLayout } from "@/components/AppLayout";
 import { RideCard } from "@/components/cards";
 import { PageHeader } from "@/components/PageHeader";
+import {
+  RideFilterBar,
+  defaultRideFilters,
+  type RideFilters,
+} from "@/components/RideFilterBar";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
@@ -37,22 +42,77 @@ export const Route = createFileRoute("/transit")({
 function TransitPage() {
   const [posted, setPosted] = useState<Ride[]>([]);
   const [open, setOpen] = useState(false);
-  const rides = [...posted, ...RIDES];
+  const rides = useMemo(() => [...posted, ...RIDES], [posted]);
+
+  const priceCeiling = useMemo(
+    () => Math.max(1000, ...rides.map((r) => r.costPerHead)),
+    [rides],
+  );
+  const [filters, setFilters] = useState<RideFilters>(() => defaultRideFilters(1000));
+  const resetFilters = () => setFilters(defaultRideFilters(priceCeiling));
+  const isDirty =
+    filters.query !== "" || filters.maxPrice < priceCeiling || filters.sort !== "price-asc";
+
+  const visible = useMemo(() => {
+    const q = filters.query.trim().toLowerCase();
+    const list = rides.filter(
+      (r) =>
+        r.costPerHead <= filters.maxPrice &&
+        (q === "" ||
+          r.origin.toLowerCase().includes(q) ||
+          r.destination.toLowerCase().includes(q)),
+    );
+    return list.sort((a, b) => {
+      if (filters.sort === "price-asc") return a.costPerHead - b.costPerHead;
+      if (filters.sort === "price-desc") return b.costPerHead - a.costPerHead;
+      return (a.distanceKm ?? Infinity) - (b.distanceKm ?? Infinity);
+    });
+  }, [rides, filters]);
 
   return (
     <AppLayout>
       <PageHeader title="Campus Ride Pool" subtitle="Share a ride, split the fare" />
 
+      <div className="px-5 pt-4">
+        <RideFilterBar
+          filters={filters}
+          onChange={setFilters}
+          onReset={resetFilters}
+          priceCeiling={priceCeiling}
+          isDirty={isDirty}
+        />
+      </div>
+
       <div className="flex items-center gap-1.5 px-5 pt-4 text-xs font-medium text-muted-foreground">
         <Navigation className="h-3.5 w-3.5 text-accent" />
-        {rides.length} active pools near your campus
+        {visible.length} of {rides.length} pools match your filters
       </div>
 
       <main className="space-y-3 px-5 py-4">
-        {rides.map((r) => (
-          <RideCard key={r.id} ride={r} />
+        {visible.map((r) => (
+          <div key={r.id} className="animate-in fade-in slide-in-from-bottom-1 duration-300">
+            <RideCard ride={r} />
+          </div>
         ))}
+
+        {visible.length === 0 && (
+          <div className="animate-in fade-in rounded-2xl border border-dashed border-border bg-card p-6 text-center shadow-card duration-300">
+            <div className="mx-auto grid h-12 w-12 place-items-center rounded-full bg-secondary text-primary">
+              <SearchX className="h-5 w-5" />
+            </div>
+            <p className="mt-3 text-sm font-semibold text-foreground">
+              No rides found matching your filters.
+            </p>
+            <p className="mt-1 text-xs text-muted-foreground">
+              Try increasing your max price or clearing search terms.
+            </p>
+            <Button variant="outline" size="sm" className="mt-4" onClick={resetFilters}>
+              Reset Filters
+            </Button>
+          </div>
+        )}
       </main>
+
 
       <button
         onClick={() => setOpen(true)}
