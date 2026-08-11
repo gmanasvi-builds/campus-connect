@@ -211,6 +211,7 @@ export const RIDES: Ride[] = [
     mode: "Auto",
     host: "Nikhil",
     costPerHead: 35,
+    distanceKm: 1.8,
   },
   {
     id: "r2",
@@ -221,6 +222,7 @@ export const RIDES: Ride[] = [
     mode: "Cab",
     host: "Divya",
     costPerHead: 60,
+    distanceKm: 3.4,
   },
   {
     id: "r3",
@@ -231,6 +233,7 @@ export const RIDES: Ride[] = [
     mode: "Bike",
     host: "Arjun",
     costPerHead: 0,
+    distanceKm: 0.9,
   },
   {
     id: "r4",
@@ -241,6 +244,7 @@ export const RIDES: Ride[] = [
     mode: "Bus",
     host: "Pooja",
     costPerHead: 25,
+    distanceKm: 5.2,
   },
 ];
 
