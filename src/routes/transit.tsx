@@ -1,10 +1,15 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
-import { Plus, MapPin, Navigation, Clock } from "lucide-react";
+import { Plus, MapPin, Navigation, Clock, SearchX } from "lucide-react";
 import { toast } from "sonner";
 import { AppLayout } from "@/components/AppLayout";
 import { RideCard } from "@/components/cards";
 import { PageHeader } from "@/components/PageHeader";
+import {
+  RideFilterBar,
+  defaultRideFilters,
+  type RideFilters,
+} from "@/components/RideFilterBar";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
