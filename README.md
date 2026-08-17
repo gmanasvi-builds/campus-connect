@@ -110,3 +110,12 @@ Screenshot of profile page
 
 This project is independent and self-directed. Having recently graduated from high school(class 12) and not yet entered university, it has no affiliation with ,or 
 backing from any college or academic institution
+
+## Recent updates and features
+
+User management: Added an Edit Profile feature allowing users to customize account details.
+Listing Controls: Added seller options to set specific time limits for rentals.
+Search & discovery: Added a search bar based on Topic and Year.
+Ride Filtering & Sorting: 
+   * Filter rides by origin and destination
+   * Dynamic sorting options: Lowest Price First, Highest Price First, Nearest Location First
