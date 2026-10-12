@@ -248,4 +248,46 @@ export const RIDES: Ride[] = [
   },
 ];
 
+export type CampusEventCategory = "Cultural" | "Technical" | "Sports" | "Workshop";
+
+export const EVENT_CATEGORIES: CampusEventCategory[] = ["Cultural", "Technical", "Sports", "Workshop"];
+
+export const EVENT_EMOJI: Record<CampusEventCategory, string> = {
+  Cultural: "🎭",
+  Technical: "💻",
+  Sports: "🏏",
+  Workshop: "🛠️",
+};
+
+export type CampusEvent = {
+  id: string;
+  title: string;
+  description: string;
+  dateTime: string;
+  venue: string;
+  category: CampusEventCategory;
+  participation: boolean;
+  participantMode: "Individual" | "Team" | "Both";
+  maxTeamSize: number;
+  volunteering: boolean;
+  volunteersNeeded: number;
+  roles: string[];
+  slots: string[];
+  contact: string;
+};
+
+export const EVENTS: CampusEvent[] = [
+  { id: "e1", title: "HackCBIT 24-hr Hackathon", description: "Build anything in 24 hours.", dateTime: "2026-10-24T09:00", venue: "CBIT Main Auditorium", category: "Technical", participation: true, participantMode: "Team", maxTeamSize: 4, volunteering: true, volunteersNeeded: 15, roles: ["Registration Desk", "Tech Support", "Food & Logistics"], slots: ["9 AM – 3 PM", "3 PM – 9 PM", "Overnight"], contact: "hack@cbit.ac.in" },
+  { id: "e2", title: "Navrang Cultural Fest", description: "Dance, music, and drama.", dateTime: "2026-11-02T17:00", venue: "Open Air Theatre", category: "Cultural", participation: true, participantMode: "Both", maxTeamSize: 8, volunteering: true, volunteersNeeded: 25, roles: ["Stage Crew", "Hospitality", "Photography"], slots: ["4 PM – 7 PM", "7 PM – 10 PM"], contact: "+91 98765 43210" },
+  { id: "e3", title: "Inter-College Cricket Cup", description: "T10 knockout tournament.", dateTime: "2026-11-09T07:30", venue: "Sports Ground", category: "Sports", participation: true, participantMode: "Team", maxTeamSize: 11, volunteering: false, volunteersNeeded: 0, roles: [], slots: [], contact: "" },
+  { id: "e4", title: "Intro to Figma Workshop", description: "Hands-on UI design basics.", dateTime: "2026-10-18T14:00", venue: "Lab 204, IT Block", category: "Workshop", participation: true, participantMode: "Individual", maxTeamSize: 1, volunteering: true, volunteersNeeded: 3, roles: ["Lab Assistant"], slots: ["1:30 PM – 5 PM"], contact: "design.club@vce.ac.in" },
+  { id: "e5", title: "Campus Clean-Up Drive", description: "Help keep our campus green.", dateTime: "2026-10-20T07:00", venue: "Gate 1", category: "Cultural", participation: false, participantMode: "Individual", maxTeamSize: 1, volunteering: true, volunteersNeeded: 40, roles: ["Collection", "Segregation", "Awareness"], slots: ["7 AM – 9 AM", "9 AM – 11 AM"], contact: "nss@cbit.ac.in" },
+];
+
+export function formatEventDateTime(dt: string) {
+  const d = new Date(dt);
+  if (isNaN(d.getTime())) return dt;
+  return d.toLocaleString("en-IN", { weekday: "short", day: "numeric", month: "short", hour: "numeric", minute: "2-digit" });
+}
+
 export const SUBJECTS = ["DSA", "DBMS", "OS", "Physics", "Mathematics", "Networks", "AI/ML"];
