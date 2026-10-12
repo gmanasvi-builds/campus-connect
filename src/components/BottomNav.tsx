@@ -1,11 +1,12 @@
 import { Link, useRouterState } from "@tanstack/react-router";
-import { Home, NotebookPen, ShoppingBag, Bus, User } from "lucide-react";
+import { Home, NotebookPen, ShoppingBag, Bus, User, CalendarDays } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const TABS = [
   { to: "/", label: "Home", icon: Home },
   { to: "/notes", label: "Notes", icon: NotebookPen },
   { to: "/books", label: "Books", icon: ShoppingBag },
+  { to: "/events", label: "Events", icon: CalendarDays },
   { to: "/transit", label: "Transit", icon: Bus },
   { to: "/profile", label: "Profile", icon: User },
 ] as const;
@@ -15,7 +16,7 @@ export function BottomNav() {
 
   return (
     <nav className="fixed inset-x-0 bottom-0 z-40 mx-auto max-w-md border-t border-border bg-card/95 backdrop-blur supports-[backdrop-filter]:bg-card/80">
-      <ul className="grid grid-cols-5 px-1 pb-[env(safe-area-inset-bottom)]">
+      <ul className="grid grid-cols-6 px-1 pb-[env(safe-area-inset-bottom)]">
         {TABS.map(({ to, label, icon: Icon }) => {
           const active = to === "/" ? pathname === "/" : pathname.startsWith(to);
           return (
