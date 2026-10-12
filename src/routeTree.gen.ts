@@ -14,6 +14,7 @@ import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as OnboardingRouteImport } from './routes/onboarding'
 import { Route as NotesRouteImport } from './routes/notes'
+import { Route as EventsRouteImport } from './routes/events'
 import { Route as BooksRouteImport } from './routes/books'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as IndexRouteImport } from './routes/index'
@@ -43,6 +44,11 @@ const NotesRoute = NotesRouteImport.update({
   path: '/notes',
   getParentRoute: () => rootRouteImport,
 } as any)
+const EventsRoute = EventsRouteImport.update({
+  id: '/events',
+  path: '/events',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const BooksRoute = BooksRouteImport.update({
   id: '/books',
   path: '/books',
@@ -63,6 +69,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/books': typeof BooksRoute
+  '/events': typeof EventsRoute
   '/notes': typeof NotesRoute
   '/onboarding': typeof OnboardingRoute
   '/profile': typeof ProfileRoute
@@ -73,6 +80,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/books': typeof BooksRoute
+  '/events': typeof EventsRoute
   '/notes': typeof NotesRoute
   '/onboarding': typeof OnboardingRoute
   '/profile': typeof ProfileRoute
@@ -84,6 +92,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/books': typeof BooksRoute
+  '/events': typeof EventsRoute
   '/notes': typeof NotesRoute
   '/onboarding': typeof OnboardingRoute
   '/profile': typeof ProfileRoute
@@ -96,6 +105,7 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/books'
+    | '/events'
     | '/notes'
     | '/onboarding'
     | '/profile'
@@ -106,6 +116,7 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/books'
+    | '/events'
     | '/notes'
     | '/onboarding'
     | '/profile'
@@ -116,6 +127,7 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/books'
+    | '/events'
     | '/notes'
     | '/onboarding'
     | '/profile'
@@ -127,6 +139,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthRoute: typeof AuthRoute
   BooksRoute: typeof BooksRoute
+  EventsRoute: typeof EventsRoute
   NotesRoute: typeof NotesRoute
   OnboardingRoute: typeof OnboardingRoute
   ProfileRoute: typeof ProfileRoute
@@ -171,6 +184,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof NotesRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/events': {
+      id: '/events'
+      path: '/events'
+      fullPath: '/events'
+      preLoaderRoute: typeof EventsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/books': {
       id: '/books'
       path: '/books'
@@ -199,6 +219,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthRoute: AuthRoute,
   BooksRoute: BooksRoute,
+  EventsRoute: EventsRoute,
   NotesRoute: NotesRoute,
   OnboardingRoute: OnboardingRoute,
   ProfileRoute: ProfileRoute,
