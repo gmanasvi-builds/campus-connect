@@ -88,7 +88,8 @@ function PostDialog({
   const [price, setPrice] = useState("");
   const [condition, setCondition] = useState<Book["condition"]>("Used");
   const [emoji, setEmoji] = useState("📘");
-  const [rentalDuration, setRentalDuration] = useState<RentalDuration>("Sale (no return)");
+  const [rentalDuration, setRentalDuration] = useState<string>("Sale (no return)");
+  const [customDuration, setCustomDuration] = useState("");
 
   const reset = () => {
     setTitle("");
@@ -96,6 +97,7 @@ function PostDialog({
     setCondition("Used");
     setEmoji("📘");
     setRentalDuration("Sale (no return)");
+    setCustomDuration("");
   };
 
   const submit = (e: React.FormEvent) => {
@@ -110,7 +112,10 @@ function PostDialog({
       seller: "You",
       distanceKm: 0,
       emoji,
-      rentalDuration,
+      rentalDuration:
+        rentalDuration === "Custom"
+          ? customDuration.trim() || "Custom"
+          : rentalDuration,
     });
     reset();
     onOpenChange(false);
