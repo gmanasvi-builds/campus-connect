@@ -26,6 +26,7 @@ const FILTERS = [
   { to: "/notes", label: "Notes", icon: NotebookPen },
   { to: "/books", label: "Books", icon: ShoppingBag },
   { to: "/transit", label: "Transit", icon: Bus },
+  { to: "/events", label: "Events", icon: CalendarDays },
 ] as const;
 
 function HomePage() {
