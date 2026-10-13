@@ -34,7 +34,7 @@ type Category = CampusEventCategory;
 
 
 function EventsPage() {
-  const [events, setEvents] = useState<CampusEvent[]>(SEED);
+  const [events, setEvents] = useState<CampusEvent[]>(EVENTS);
   const [tab, setTab] = useState<"participate" | "volunteer">("participate");
   const [createOpen, setCreateOpen] = useState(false);
   const [registerFor, setRegisterFor] = useState<CampusEvent | null>(null);
@@ -78,14 +78,14 @@ function EventsPage() {
           tab === "participate" ? (
             <article key={e.id} className="overflow-hidden rounded-2xl border border-border bg-card shadow-card">
               <div className="gradient-hero flex items-center gap-3 px-4 py-4 text-primary-foreground">
-                <span className="text-3xl">{EMOJI[e.category]}</span>
+                <span className="text-3xl">{EVENT_EMOJI[e.category]}</span>
                 <div className="min-w-0">
                   <h3 className="line-clamp-2 font-bold leading-snug">{e.title}</h3>
                   <span className="text-xs text-primary-foreground/80">{e.category} · {e.participantMode === "Both" ? "Solo or Team" : e.participantMode}</span>
                 </div>
               </div>
               <div className="space-y-1.5 p-4 text-xs text-muted-foreground">
-                <p className="flex items-center gap-1.5"><CalendarDays className="h-3.5 w-3.5 text-accent" />{fmt(e.dateTime)}</p>
+                <p className="flex items-center gap-1.5"><CalendarDays className="h-3.5 w-3.5 text-accent" />{formatEventDateTime(e.dateTime)}</p>
                 <p className="flex items-center gap-1.5"><MapPin className="h-3.5 w-3.5 text-accent" />{e.venue}</p>
                 <Button size="sm" className="mt-2 w-full" onClick={() => setRegisterFor(e)}>Register / Join</Button>
               </div>
@@ -96,7 +96,7 @@ function EventsPage() {
                 <h3 className="text-sm font-bold text-foreground">{e.title}</h3>
                 <Badge variant="secondary" className="shrink-0 font-bold">{e.volunteersNeeded} needed</Badge>
               </div>
-              <p className="mt-1 flex items-center gap-1.5 text-xs text-muted-foreground"><CalendarDays className="h-3.5 w-3.5 text-accent" />{fmt(e.dateTime)} · {e.venue}</p>
+              <p className="mt-1 flex items-center gap-1.5 text-xs text-muted-foreground"><CalendarDays className="h-3.5 w-3.5 text-accent" />{formatEventDateTime(e.dateTime)} · {e.venue}</p>
               <div className="mt-3 flex flex-wrap gap-1.5">
                 {e.roles.map((r) => <span key={r} className="rounded-md bg-accent/15 px-2 py-0.5 text-[11px] font-semibold text-accent-foreground">{r}</span>)}
               </div>
@@ -190,10 +190,10 @@ function CreateEventDialog({ open, onOpenChange, onCreate }: { open: boolean; on
           </div>
           <Field label="Category">
             <div className="flex flex-wrap gap-1.5">
-              {CATEGORIES.map((c) => (
+              {EVENT_CATEGORIES.map((c) => (
                 <button key={c} type="button" onClick={() => setCategory(c)}
                   className={cn("rounded-full border px-3 py-1 text-xs font-semibold", category === c ? "border-primary bg-primary text-primary-foreground" : "border-border text-muted-foreground")}>
-                  {EMOJI[c]} {c}
+                  {EVENT_EMOJI[c]} {c}
                 </button>
               ))}
             </div>
