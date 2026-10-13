@@ -192,7 +192,7 @@ function PostDialog({
             <Label className="text-xs font-semibold">Rental duration</Label>
             <select
               value={rentalDuration}
-              onChange={(e) => setRentalDuration(e.target.value as RentalDuration)}
+              onChange={(e) => setRentalDuration(e.target.value)}
               className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm"
             >
               {RENTAL_DURATIONS.map((d) => (
@@ -200,7 +200,16 @@ function PostDialog({
                   {d}
                 </option>
               ))}
+              <option value="Custom">Custom — set my own time limit</option>
             </select>
+            {rentalDuration === "Custom" && (
+              <Input
+                value={customDuration}
+                onChange={(e) => setCustomDuration(e.target.value)}
+                placeholder="e.g. 5 days, till end of exams"
+                required
+              />
+            )}
             <p className="text-[11px] text-muted-foreground">
               Choose how long you're lending this item (or select "Sale" if selling outright).
             </p>
