@@ -11,7 +11,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-export type RideSort = "price-asc" | "price-desc" | "nearest";
+export type RideSort = "price-asc" | "nearest";
 
 export type RideFilters = {
   query: string;
@@ -104,7 +104,6 @@ export function RideFilterBar({
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="price-asc">Lowest Price First</SelectItem>
-                <SelectItem value="price-desc">Highest Price First</SelectItem>
                 <SelectItem value="nearest">Nearest Location First</SelectItem>
               </SelectContent>
             </Select>

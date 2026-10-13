@@ -77,7 +77,7 @@ export type Book = {
   seller: string;
   distanceKm: number;
   emoji: string;
-  rentalDuration?: RentalDuration;
+  rentalDuration?: string;
 };
 
 export type Ride = {

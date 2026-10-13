@@ -64,7 +64,6 @@ function TransitPage() {
     );
     return list.sort((a, b) => {
       if (filters.sort === "price-asc") return a.costPerHead - b.costPerHead;
-      if (filters.sort === "price-desc") return b.costPerHead - a.costPerHead;
       return (a.distanceKm ?? Infinity) - (b.distanceKm ?? Infinity);
     });
   }, [rides, filters]);

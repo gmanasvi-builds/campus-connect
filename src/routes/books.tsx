@@ -16,7 +16,7 @@ import {
   DialogTitle,
   DialogFooter,
 } from "@/components/ui/dialog";
-import { BOOKS, RENTAL_DURATIONS, type Book, type RentalDuration } from "@/lib/mock-data";
+import { BOOKS, RENTAL_DURATIONS, type Book } from "@/lib/mock-data";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/books")({
@@ -88,7 +88,8 @@ function PostDialog({
   const [price, setPrice] = useState("");
   const [condition, setCondition] = useState<Book["condition"]>("Used");
   const [emoji, setEmoji] = useState("📘");
-  const [rentalDuration, setRentalDuration] = useState<RentalDuration>("Sale (no return)");
+  const [rentalDuration, setRentalDuration] = useState<string>("Sale (no return)");
+  const [customDuration, setCustomDuration] = useState("");
 
   const reset = () => {
     setTitle("");
@@ -96,6 +97,7 @@ function PostDialog({
     setCondition("Used");
     setEmoji("📘");
     setRentalDuration("Sale (no return)");
+    setCustomDuration("");
   };
 
   const submit = (e: React.FormEvent) => {
@@ -110,7 +112,10 @@ function PostDialog({
       seller: "You",
       distanceKm: 0,
       emoji,
-      rentalDuration,
+      rentalDuration:
+        rentalDuration === "Custom"
+          ? customDuration.trim() || "Custom"
+          : rentalDuration,
     });
     reset();
     onOpenChange(false);
@@ -187,7 +192,7 @@ function PostDialog({
             <Label className="text-xs font-semibold">Rental duration</Label>
             <select
               value={rentalDuration}
-              onChange={(e) => setRentalDuration(e.target.value as RentalDuration)}
+              onChange={(e) => setRentalDuration(e.target.value)}
               className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm"
             >
               {RENTAL_DURATIONS.map((d) => (
@@ -195,7 +200,16 @@ function PostDialog({
                   {d}
                 </option>
               ))}
+              <option value="Custom">Custom — set my own time limit</option>
             </select>
+            {rentalDuration === "Custom" && (
+              <Input
+                value={customDuration}
+                onChange={(e) => setCustomDuration(e.target.value)}
+                placeholder="e.g. 5 days, till end of exams"
+                required
+              />
+            )}
             <p className="text-[11px] text-muted-foreground">
               Choose how long you're lending this item (or select "Sale" if selling outright).
             </p>
