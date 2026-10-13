@@ -1,12 +1,13 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
-import { Search, Bell, TrendingUp, NotebookPen, ShoppingBag, Bus, ChevronRight } from "lucide-react";
+import { Search, Bell, TrendingUp, NotebookPen, ShoppingBag, Bus, ChevronRight, CalendarDays, MapPin } from "lucide-react";
 import { AppLayout } from "@/components/AppLayout";
 import { Logo } from "@/components/Logo";
 import { NoteCard, BookCard, RideCard } from "@/components/cards";
 import { ChatDialog } from "@/components/ChatDialog";
 import { useProfile } from "@/hooks/use-profile";
-import { NOTES, BOOKS, RIDES, type Book } from "@/lib/mock-data";
+import { NOTES, BOOKS, RIDES, EVENTS, EVENT_EMOJI, formatEventDateTime, type Book } from "@/lib/mock-data";
+
 
 export const Route = createFileRoute("/")({
   head: () => ({
