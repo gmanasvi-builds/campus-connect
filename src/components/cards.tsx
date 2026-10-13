@@ -9,6 +9,10 @@ function priceLabel(price: number) {
   return price === 0 ? "FREE" : `₹${price}`;
 }
 
+function rentalLabel(duration: string) {
+  return duration.startsWith("Sale") ? "For Sale" : duration;
+}
+
 const noteIcon = {
   Notes: FileText,
   "Lab Manual": FlaskConical,
@@ -73,8 +77,14 @@ const conditionStyles = {
 export function BookCard({ book, onChat }: { book: Book; onChat: (book: Book) => void }) {
   return (
     <article className="flex gap-3 rounded-2xl border border-border bg-card p-3 shadow-card">
-      <div className="grid h-20 w-20 shrink-0 place-items-center rounded-xl bg-secondary text-3xl">
+      <div className="relative grid h-20 w-20 shrink-0 place-items-center overflow-hidden rounded-xl bg-secondary text-3xl">
         {book.emoji}
+        {book.rentalDuration && (
+          <span className="absolute inset-x-0 bottom-0 flex items-center justify-center gap-0.5 bg-primary/90 px-1 py-1 text-[9px] font-bold leading-none text-primary-foreground">
+            <Clock className="h-2.5 w-2.5 shrink-0" />
+            <span className="truncate">{rentalLabel(book.rentalDuration)}</span>
+          </span>
+        )}
       </div>
       <div className="flex min-w-0 flex-1 flex-col">
         <div className="flex items-start justify-between gap-2">
@@ -90,11 +100,6 @@ export function BookCard({ book, onChat }: { book: Book; onChat: (book: Book) =>
             {book.condition}
           </Badge>
           <span className="text-[11px] text-muted-foreground">{book.category}</span>
-          {book.rentalDuration && (
-            <span className="rounded-md bg-accent/15 px-1.5 py-0.5 text-[11px] font-semibold text-accent-foreground">
-              {book.rentalDuration}
-            </span>
-          )}
         </div>
         <div className="mt-1 flex items-center gap-1 text-[11px] text-muted-foreground">
           <MapPin className="h-3 w-3 text-accent" />
