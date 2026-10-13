@@ -136,7 +136,7 @@ function Section({
 }: {
   title: string;
   icon: React.ReactNode;
-  to: "/notes" | "/books" | "/transit";
+  to: "/notes" | "/books" | "/transit" | "/events";
   children: React.ReactNode;
 }) {
   return (
