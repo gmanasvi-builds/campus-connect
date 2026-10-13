@@ -74,6 +74,30 @@ function HomePage() {
       </header>
 
       <main className="space-y-7 px-5 py-6">
+        <Section title="Upcoming events" icon={<CalendarDays className="h-4 w-4 text-accent" />} to="/events">
+          <div className="no-scrollbar -mx-5 flex gap-3 overflow-x-auto px-5 pb-1">
+            {EVENTS.slice(0, 4).map((e) => (
+              <Link
+                key={e.id}
+                to="/events"
+                className="w-56 shrink-0 overflow-hidden rounded-2xl border border-border bg-card shadow-card transition-transform active:scale-[0.98]"
+              >
+                <div className="gradient-hero flex items-center gap-2 px-3 py-3 text-primary-foreground">
+                  <span className="text-2xl">{EVENT_EMOJI[e.category]}</span>
+                  <div className="min-w-0">
+                    <h3 className="line-clamp-2 text-sm font-bold leading-snug">{e.title}</h3>
+                    <span className="text-[11px] text-primary-foreground/80">{e.category}</span>
+                  </div>
+                </div>
+                <div className="space-y-1 p-3 text-[11px] text-muted-foreground">
+                  <p className="flex items-center gap-1.5"><CalendarDays className="h-3 w-3 shrink-0 text-accent" />{formatEventDateTime(e.dateTime)}</p>
+                  <p className="flex items-center gap-1.5"><MapPin className="h-3 w-3 shrink-0 text-accent" />{e.venue}</p>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </Section>
+
         <Section title="Trending notes" icon={<TrendingUp className="h-4 w-4 text-accent" />} to="/notes">
           <div className="no-scrollbar -mx-5 flex gap-3 overflow-x-auto px-5 pb-1">
             {NOTES.filter((n) => n.trending).map((n) => (
