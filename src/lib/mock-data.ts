@@ -158,6 +158,7 @@ export const BOOKS: Book[] = [
     seller: "Vikram, CBIT",
     distanceKm: 0.4,
     emoji: "📘",
+    rentalDuration: "1 semester",
   },
   {
     id: "b2",
@@ -168,6 +169,7 @@ export const BOOKS: Book[] = [
     seller: "Ananya, Vasavi",
     distanceKm: 1.2,
     emoji: "📐",
+    rentalDuration: "2 weeks",
   },
   {
     id: "b3",
@@ -178,6 +180,7 @@ export const BOOKS: Book[] = [
     seller: "Rohit, MVSR",
     distanceKm: 0.8,
     emoji: "🥼",
+    rentalDuration: "1 month",
   },
   {
     id: "b4",
@@ -188,6 +191,7 @@ export const BOOKS: Book[] = [
     seller: "Meera, Narayana",
     distanceKm: 2.1,
     emoji: "📕",
+    rentalDuration: "1 academic year",
   },
   {
     id: "b5",
@@ -198,6 +202,7 @@ export const BOOKS: Book[] = [
     seller: "Sai, CBIT",
     distanceKm: 0.6,
     emoji: "🧮",
+    rentalDuration: "Sale (no return)",
   },
 ];
 
