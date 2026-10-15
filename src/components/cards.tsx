@@ -80,9 +80,9 @@ export function BookCard({ book, onChat }: { book: Book; onChat: (book: Book) =>
       <div className="relative grid h-20 w-20 shrink-0 place-items-center overflow-hidden rounded-xl bg-secondary text-3xl">
         {book.emoji}
         {book.rentalDuration && (
-          <span className="absolute inset-x-0 bottom-0 flex items-center justify-center gap-0.5 bg-primary/90 px-1 py-1 text-[9px] font-bold leading-none text-primary-foreground">
+          <span className="absolute inset-x-0 bottom-0 flex items-center justify-center gap-0.5 bg-primary/90 px-1 py-1 text-[8px] font-bold leading-[1.15] text-primary-foreground">
             <Clock className="h-2.5 w-2.5 shrink-0" />
-            <span className="truncate">{rentalLabel(book.rentalDuration)}</span>
+            <span className="text-center">{rentalLabel(book.rentalDuration)}</span>
           </span>
         )}
       </div>
