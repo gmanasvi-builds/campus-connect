@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
-import { CalendarDays, MapPin, Plus, Users, HandHeart, Clock } from "lucide-react";
+import { CalendarDays, MapPin, Plus, Users, HandHeart, Clock, Search } from "lucide-react";
 import { toast } from "sonner";
 import { AppLayout } from "@/components/AppLayout";
 import { PageHeader } from "@/components/PageHeader";
@@ -30,6 +30,7 @@ export const Route = createFileRoute("/events")({
 import { EVENT_CATEGORIES, EVENT_EMOJI, EVENTS, formatEventDateTime, type CampusEvent, type CampusEventCategory } from "@/lib/mock-data";
 
 type Category = CampusEventCategory;
+const SEARCH_CATEGORIES = ["Cultural", "Sports", "Technical"] as const;
 
 
 
@@ -39,8 +40,13 @@ function EventsPage() {
   const [createOpen, setCreateOpen] = useState(false);
   const [registerFor, setRegisterFor] = useState<CampusEvent | null>(null);
   const [volunteerFor, setVolunteerFor] = useState<CampusEvent | null>(null);
+  const [categorySearch, setCategorySearch] = useState<Record<(typeof SEARCH_CATEGORIES)[number], string>>({
+    Cultural: "",
+    Sports: "",
+    Technical: "",
+  });
 
-  const list = events.filter((e) => (tab === "participate" ? e.participation : e.volunteering));
+  const visibleForTab = events.filter((e) => (tab === "participate" ? e.participation : e.volunteering));
 
   return (
     <AppLayout>
@@ -68,13 +74,43 @@ function EventsPage() {
         </div>
       </div>
 
-      <main className="space-y-3 px-5 py-4">
-        {list.length === 0 && (
-          <p className="rounded-2xl border border-dashed border-border p-6 text-center text-sm text-muted-foreground">
+      <main className="space-y-5 px-5 py-4">
+        {SEARCH_CATEGORIES.map((category) => (
+          <label key={category} className="block rounded-xl border border-border bg-card p-3 shadow-card">
+            <span className="mb-2 flex items-center gap-2 text-sm font-bold text-foreground">
+              <span className="text-lg" aria-hidden="true">{EVENT_EMOJI[category]}</span>
+              Search {category} events
+            </span>
+            <span className="relative block">
+              <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+              <Input
+                aria-label={`Search ${category} events`}
+                value={categorySearch[category]}
+                onChange={(event) => setCategorySearch((current) => ({ ...current, [category]: event.target.value }))}
+                placeholder={`Search ${category.toLowerCase()} events`}
+                className="pl-9"
+              />
+            </span>
+          </label>
+        ))}
+
+        {visibleForTab.length === 0 && (
+          <p className="rounded-xl border border-dashed border-border p-6 text-center text-sm text-muted-foreground">
             No events here yet. Create one!
           </p>
         )}
-        {list.map((e) =>
+        {SEARCH_CATEGORIES.map((category) => {
+          const query = categorySearch[category].trim().toLocaleLowerCase();
+          const categoryEvents = visibleForTab.filter((event) => {
+            if (event.category !== category) return false;
+            if (!query) return true;
+            return [event.title, event.description, event.venue].some((value) => value.toLocaleLowerCase().includes(query));
+          });
+          if (categoryEvents.length === 0) return null;
+          return (
+            <section key={category} className="space-y-3" aria-label={`${category} events`}>
+              <h2 className="text-sm font-bold text-muted-foreground">{category}</h2>
+              {categoryEvents.map((e) =>
           tab === "participate" ? (
             <article key={e.id} className="overflow-hidden rounded-2xl border border-border bg-card shadow-card">
               <div className="gradient-hero flex items-center gap-3 px-4 py-4 text-primary-foreground">
@@ -108,6 +144,49 @@ function EventsPage() {
               </Button>
             </article>
           ),
+              )}
+            </section>
+          );
+        })}
+        {visibleForTab.filter((event) => event.category === "Workshop").length > 0 && (
+          <section className="space-y-3" aria-label="Workshop events">
+            <h2 className="text-sm font-bold text-muted-foreground">Workshop</h2>
+            {visibleForTab.filter((event) => event.category === "Workshop").map((e) =>
+              tab === "participate" ? (
+                <article key={e.id} className="overflow-hidden rounded-xl border border-border bg-card shadow-card">
+                  <div className="gradient-hero flex items-center gap-3 px-4 py-4 text-primary-foreground">
+                    <span className="text-3xl">{EVENT_EMOJI[e.category]}</span>
+                    <div className="min-w-0">
+                      <h3 className="line-clamp-2 font-bold leading-snug">{e.title}</h3>
+                      <span className="text-xs text-primary-foreground/80">{e.category} · {e.participantMode === "Both" ? "Solo or Team" : e.participantMode}</span>
+                    </div>
+                  </div>
+                  <div className="space-y-1.5 p-4 text-xs text-muted-foreground">
+                    <p className="flex items-center gap-1.5"><CalendarDays className="h-3.5 w-3.5 text-accent" />{formatEventDateTime(e.dateTime)}</p>
+                    <p className="flex items-center gap-1.5"><MapPin className="h-3.5 w-3.5 text-accent" />{e.venue}</p>
+                    <Button size="sm" className="mt-2 w-full" onClick={() => setRegisterFor(e)}>Register / Join</Button>
+                  </div>
+                </article>
+              ) : (
+                <article key={e.id} className="rounded-xl border border-border bg-card p-4 shadow-card">
+                  <div className="flex items-start justify-between gap-2">
+                    <h3 className="text-sm font-bold text-foreground">{e.title}</h3>
+                    <Badge variant="secondary" className="shrink-0 font-bold">{e.volunteersNeeded} needed</Badge>
+                  </div>
+                  <p className="mt-1 flex items-center gap-1.5 text-xs text-muted-foreground"><CalendarDays className="h-3.5 w-3.5 text-accent" />{formatEventDateTime(e.dateTime)} · {e.venue}</p>
+                  <div className="mt-3 flex flex-wrap gap-1.5">
+                    {e.roles.map((role) => <span key={role} className="rounded-md bg-accent/15 px-2 py-0.5 text-[11px] font-semibold text-accent-foreground">{role}</span>)}
+                  </div>
+                  <div className="mt-2 flex flex-wrap gap-1.5">
+                    {e.slots.map((slot) => <span key={slot} className="flex items-center gap-1 rounded-md bg-muted px-2 py-0.5 text-[11px] text-foreground"><Clock className="h-3 w-3" />{slot}</span>)}
+                  </div>
+                  <Button size="sm" variant="outline" className="mt-3 w-full" onClick={() => setVolunteerFor(e)}>
+                    <HandHeart className="h-4 w-4" /> Sign Up to Volunteer
+                  </Button>
+                </article>
+              ),
+            )}
+          </section>
         )}
       </main>
 

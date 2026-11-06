@@ -43,6 +43,8 @@ export const DEPARTMENTS = [
   "Commerce",
 ];
 
+export const SEMESTERS = Array.from({ length: 8 }, (_, index) => `Semester ${index + 1}`);
+
 export type Note = {
   id: string;
   title: string;

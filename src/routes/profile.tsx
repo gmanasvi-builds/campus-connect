@@ -20,6 +20,7 @@ import { AppLayout } from "@/components/AppLayout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import {
   Dialog,
   DialogContent,
@@ -28,6 +29,7 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 import { useProfile } from "@/hooks/use-profile";
+import { SEMESTERS } from "@/lib/mock-data";
 
 export const Route = createFileRoute("/profile")({
   head: () => ({
@@ -91,6 +93,7 @@ function ProfilePage() {
           <InfoRow icon={<Building2 className="h-4 w-4 text-accent" />} label="University / Board" value={profile?.university ?? undefined} />
           <InfoRow icon={<GraduationCap className="h-4 w-4 text-accent" />} label="College / School" value={profile?.college ?? undefined} />
           <InfoRow icon={<BookOpen className="h-4 w-4 text-accent" />} label="Department" value={profile?.department ?? undefined} />
+          <InfoRow icon={<BookOpen className="h-4 w-4 text-accent" />} label="Semester" value={profile?.semester ?? undefined} />
         </div>
       </section>
 
@@ -129,6 +132,7 @@ function EditProfileDialog({
   const [university, setUniversity] = useState("");
   const [college, setCollege] = useState("");
   const [department, setDepartment] = useState("");
+  const [semester, setSemester] = useState("");
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
@@ -138,6 +142,7 @@ function EditProfileDialog({
     setUniversity(profile?.university ?? "");
     setCollege(profile?.college ?? "");
     setDepartment(profile?.department ?? "");
+    setSemester(profile?.semester ?? "");
   }, [open, profile]);
 
   const submit = async (e: React.FormEvent) => {
@@ -149,6 +154,7 @@ function EditProfileDialog({
       university: university.trim() || null,
       college: college.trim() || null,
       department: department.trim() || null,
+      semester: semester || null,
     });
     setSaving(false);
     if (error) {
@@ -171,6 +177,17 @@ function EditProfileDialog({
           <Field label="University / Board" value={university} onChange={setUniversity} placeholder="e.g. Osmania University" />
           <Field label="College / School" value={college} onChange={setCollege} placeholder="e.g. UCE" />
           <Field label="Department / Stream" value={department} onChange={setDepartment} placeholder="e.g. Computer Science" />
+          <div className="space-y-1.5">
+            <Label className="text-xs font-semibold">Current semester</Label>
+            <Select value={semester} onValueChange={setSemester}>
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Choose your semester" />
+              </SelectTrigger>
+              <SelectContent>
+                {SEMESTERS.map((item) => <SelectItem key={item} value={item}>{item}</SelectItem>)}
+              </SelectContent>
+            </Select>
+          </div>
           <DialogFooter>
             <Button type="submit" className="w-full" disabled={saving}>
               {saving ? "Saving…" : "Save changes"}

@@ -22,6 +22,7 @@ export type Database = {
           email: string | null
           id: string
           name: string | null
+          semester: string | null
           state: string | null
           university: string | null
           updated_at: string
@@ -33,6 +34,7 @@ export type Database = {
           email?: string | null
           id: string
           name?: string | null
+          semester?: string | null
           state?: string | null
           university?: string | null
           updated_at?: string
@@ -44,6 +46,7 @@ export type Database = {
           email?: string | null
           id?: string
           name?: string | null
+          semester?: string | null
           state?: string | null
           university?: string | null
           updated_at?: string

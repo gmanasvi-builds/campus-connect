@@ -6,9 +6,11 @@ import { Logo } from "@/components/Logo";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useProfile } from "@/hooks/use-profile";
 import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable";
+import { SEMESTERS } from "@/lib/mock-data";
 
 export const Route = createFileRoute("/auth")({
   head: () => ({
@@ -27,6 +29,7 @@ function AuthPage() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [semester, setSemester] = useState("");
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -43,15 +46,22 @@ function AuthPage() {
           email,
           password,
           options: {
-            data: { name },
+            data: { name, semester: semester || null },
             emailRedirectTo: window.location.origin,
           },
         });
         if (error) throw error;
         toast.success("Account created! Let's set up your campus.");
       } else {
-        const { error } = await supabase.auth.signInWithPassword({ email, password });
+        const { data, error } = await supabase.auth.signInWithPassword({ email, password });
         if (error) throw error;
+        if (semester && data.user) {
+          const { error: profileError } = await supabase
+            .from("profiles")
+            .update({ semester })
+            .eq("id", data.user.id);
+          if (profileError) throw profileError;
+        }
         toast.success("Welcome back!");
       }
       // Redirect handled by the effect once the session is live.
@@ -144,6 +154,18 @@ function AuthPage() {
               required
             />
           </Field>
+
+          <div className="space-y-1.5">
+            <Label className="text-xs font-semibold text-foreground">Current semester (optional)</Label>
+            <Select value={semester} onValueChange={setSemester}>
+              <SelectTrigger className="h-11 w-full">
+                <SelectValue placeholder="Choose your semester" />
+              </SelectTrigger>
+              <SelectContent>
+                {SEMESTERS.map((item) => <SelectItem key={item} value={item}>{item}</SelectItem>)}
+              </SelectContent>
+            </Select>
+          </div>
 
           <Button type="submit" size="lg" className="mt-2 w-full" disabled={loading}>
             {mode === "signup" ? "Continue" : "Log in"}

@@ -10,9 +10,10 @@ export type Profile = {
   university: string | null;
   college: string | null;
   department: string | null;
+  semester: string | null;
 };
 
-const PROFILE_COLUMNS = "id,name,email,state,university,college,department";
+const PROFILE_COLUMNS = "id,name,email,state,university,college,department,semester";
 
 /**
  * Real auth + profile store backed by Lovable Cloud.
