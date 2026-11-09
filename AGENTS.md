@@ -8,3 +8,5 @@
 > Commits you push to the connected branch sync back to Lovable and show up in
 > the editor, so keep the branch in a working state.
 <!-- LOVABLE:END -->
+
+Campus profile fields, including the student's current semester, are persisted on the existing profile record so onboarding, sign-in, and profile editing share one source of truth.

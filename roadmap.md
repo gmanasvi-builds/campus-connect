@@ -1,3 +1,3 @@
-- [ ] Persist semester selection from sign-in/sign-up and profile editing
-- [ ] Add independent event search banners for Cultural, Sports, Technical, and retain Workshop listings
-- [ ] Verify app build and review final changes
+- [x] Persist semester selection from sign-in/sign-up and profile editing
+- [x] Add independent event search banners for Cultural, Sports, Technical, and retain Workshop listings
+- [x] Verify app build and review final changes
