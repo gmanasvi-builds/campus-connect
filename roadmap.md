@@ -1,3 +1,4 @@
 - [x] Persist semester selection from sign-in/sign-up and profile editing
 - [x] Add independent event search banners for Cultural, Sports, Technical, and retain Workshop listings
+- [x] Update shared sample event titles on Events and home pages
 - [x] Verify app build and review final changes
