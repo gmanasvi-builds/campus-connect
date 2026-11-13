@@ -1,4 +1,5 @@
 - [x] Persist semester selection from sign-in/sign-up and profile editing
 - [x] Add independent event search banners for Cultural, Sports, Technical, and retain Workshop listings
 - [x] Update shared sample event titles on Events and home pages
+- [x] Move all sample event dates to after November 17, 2026
 - [x] Verify app build and review final changes
