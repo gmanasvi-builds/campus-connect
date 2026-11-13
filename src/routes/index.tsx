@@ -37,7 +37,7 @@ function HomePage() {
     <AppLayout>
       <header className="gradient-hero rounded-b-3xl px-5 pb-6 pt-12 text-primary-foreground">
         <div className="flex items-center justify-between">
-          <Logo className="[&_span]:text-primary-foreground" />
+          <Logo caption className="[&_span]:text-primary-foreground" />
           <button className="relative grid h-9 w-9 place-items-center rounded-full bg-primary-foreground/15">
             <Bell className="h-5 w-5" />
             <span className="absolute right-2 top-2 h-2 w-2 rounded-full bg-accent" />
